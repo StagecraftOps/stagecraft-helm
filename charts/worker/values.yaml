@@ -1,0 +1,72 @@
+namespace: stagecraft
+nameOverride: ""
+
+image:
+  repository: yourregistry/stagecraft-worker
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  enabled: false
+
+serviceAccount:
+  create: true
+  roleArn: ""
+
+env:
+  ENVIRONMENT: production
+  AWS_REGION: us-east-1
+  BEDROCK_MODEL_ID: amazon.nova-pro-v1:0
+  USE_MULTI_AGENT: "true"
+  USE_MCP_TOOLS: "true"
+  FRONTEND_URL: https://stagecraft.example.com
+
+# The Celery worker process — picks up tasks from Redis, runs the agent fleet.
+worker:
+  replicaCount: 2
+  command: []
+  containerPort: 8080
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: 8080
+    initialDelaySeconds: 10
+    periodSeconds: 15
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: 8080
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+# The SQS -> Celery bridge process — same image, different entrypoint.
+consumer:
+  replicaCount: 1
+  command: ["python", "-m", "app.sqs_consumer"]
+  containerPort: 8080
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: 8080
+    initialDelaySeconds: 10
+    periodSeconds: 15
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: 8080
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi

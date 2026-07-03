@@ -1,0 +1,57 @@
+namespace: stagecraft
+nameOverride: ""
+
+image:
+  repository: yourregistry/stagecraft-api
+  tag: latest
+  pullPolicy: IfNotPresent
+
+replicaCount: 2
+containerPort: 8000
+
+service:
+  enabled: true
+  port: 80
+  targetPort: 8000
+
+serviceAccount:
+  create: true
+  roleArn: ""
+
+env:
+  ENVIRONMENT: production
+  AWS_REGION: us-east-1
+  FRONTEND_URL: https://stagecraft.example.com
+  GITHUB_REDIRECT_URI: https://stagecraft.example.com/api/auth/callback
+  BEDROCK_MODEL_ID: amazon.nova-pro-v1:0
+
+livenessProbe:
+  httpGet:
+    path: /health/live
+    port: 8000
+  initialDelaySeconds: 10
+  periodSeconds: 15
+
+readinessProbe:
+  httpGet:
+    path: /health/ready
+    port: 8000
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+  limits:
+    cpu: "1"
+    memory: 512Mi
+
+ingress:
+  enabled: true
+  groupName: stagecraft
+  host: stagecraft.example.com
+  path: /api
+
+migration:
+  enabled: true

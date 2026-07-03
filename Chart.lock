@@ -1,0 +1,18 @@
+dependencies:
+- name: api
+  repository: file://./charts/api
+  version: 0.1.0
+- name: worker
+  repository: file://./charts/worker
+  version: 0.1.0
+- name: webhook
+  repository: file://./charts/webhook
+  version: 0.1.0
+- name: frontend
+  repository: file://./charts/frontend
+  version: 0.1.0
+- name: mcp
+  repository: file://./charts/mcp
+  version: 0.1.0
+digest: sha256:e34d45a8d1bd2719ba5495e297ca14757ad7cf93c3ea40d0738874ec9d863325
+generated: "2026-07-03T23:58:29.9299826+05:30"

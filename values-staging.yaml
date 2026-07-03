@@ -1,0 +1,36 @@
+# Staging overlay: 1-2 replicas, staging-suffixed image tags, staging host.
+# Usage: helm upgrade --install stagecraft . -f values.yaml -f values-staging.yaml
+
+api:
+  image:
+    tag: staging
+  replicaCount: 1
+  ingress:
+    host: staging.stagecraft.example.com
+
+worker:
+  image:
+    tag: staging
+  worker:
+    replicaCount: 1
+  consumer:
+    replicaCount: 1
+
+webhook:
+  image:
+    tag: staging
+  replicaCount: 1
+  ingress:
+    host: webhooks-staging.stagecraft.example.com
+
+frontend:
+  image:
+    tag: staging
+  replicaCount: 1
+  ingress:
+    host: staging.stagecraft.example.com
+
+mcp:
+  image:
+    tag: staging
+  replicaCount: 1

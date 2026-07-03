@@ -1,0 +1,12 @@
+namespace: stagecraft
+
+# Per-service overrides go under the matching subchart key, e.g.:
+#
+# api:
+#   image:
+#     tag: "abc1234"
+#   serviceAccount:
+#     roleArn: "arn:aws:iam::123456789012:role/stagecraft-api"
+#
+# See values-{dev,staging,prod}.yaml for the actual per-environment overrides,
+# and each charts/<service>/values.yaml for the full set of tunable fields.
