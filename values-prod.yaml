@@ -4,6 +4,14 @@
 # roleArn fields below must be filled in from `terraform output` in
 # stagecraft-infra before this overlay is usable.
 # Usage: helm upgrade --install stagecraft . -f values.yaml -f values-prod.yaml
+#
+# NOTE (temporary, no domain yet): all three ingresses share one ALB and are
+# addressed by the ALB's own DNS name as the Host, since there's no Route53/ACM
+# domain set up. Path routing on that single host: /api -> api (order 10),
+# /webhooks -> webhook (order 20), / -> frontend catch-all (order 30). The api
+# runs ENVIRONMENT=staging so its session cookie isn't Secure-only (we're on
+# plain http). Swap host back to a real HTTPS domain and ENVIRONMENT=production
+# once a domain + cert exist.
 
 api:
   replicaCount: 3
@@ -12,8 +20,12 @@ api:
     tag: latest
   serviceAccount:
     roleArn: "arn:aws:iam::870325637146:role/stagecraft-api"
+  env:
+    ENVIRONMENT: staging
+    FRONTEND_URL: http://k8s-stagecraft-1de7e348b3-1960332100.us-east-1.elb.amazonaws.com
+    GITHUB_REDIRECT_URI: http://k8s-stagecraft-1de7e348b3-1960332100.us-east-1.elb.amazonaws.com/api/auth/callback
   ingress:
-    host: stagecraft.example.com
+    host: k8s-stagecraft-1de7e348b3-1960332100.us-east-1.elb.amazonaws.com
 
 worker:
   image:
@@ -34,11 +46,8 @@ webhook:
   serviceAccount:
     roleArn: "arn:aws:iam::870325637146:role/stagecraft-webhook"
   ingress:
-    # Temporary: no Route53/ACM setup yet, so GitHub can't resolve
-    # webhooks.stagecraft.example.com. Using the ALB's own DNS name directly
-    # as the Host so real GitHub webhook deliveries can actually reach this
-    # service — swap back to a real domain once one exists.
     host: k8s-stagecraft-1de7e348b3-1960332100.us-east-1.elb.amazonaws.com
+    path: /webhooks
 
 frontend:
   replicaCount: 3
@@ -46,7 +55,7 @@ frontend:
     repository: yampss/stagecraft-frontend
     tag: latest
   ingress:
-    host: stagecraft.example.com
+    host: k8s-stagecraft-1de7e348b3-1960332100.us-east-1.elb.amazonaws.com
 
 mcp:
   replicaCount: 2

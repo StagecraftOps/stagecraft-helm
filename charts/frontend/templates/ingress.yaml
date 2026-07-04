@@ -1,7 +1,8 @@
 {{/*
-Catch-all "/" rule on the same ALB group as stagecraft-api's "/api" rule —
-group.order here (20) must stay higher than api's (10) so the more specific
-/api path is evaluated first.
+Catch-all "/" rule on the same ALB group as stagecraft-api's "/api" and
+stagecraft-webhook's "/webhooks" rules. group.order here (30) must stay the
+highest of the group so both more-specific paths are evaluated first and this
+only catches everything else.
 */}}
 {{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
@@ -16,7 +17,9 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/group.name: {{ .Values.ingress.groupName }}
-    alb.ingress.kubernetes.io/group.order: "20"
+    alb.ingress.kubernetes.io/group.order: "30"
+    alb.ingress.kubernetes.io/healthcheck-path: /api/health
+    alb.ingress.kubernetes.io/success-codes: "200"
 spec:
   rules:
     - host: {{ .Values.ingress.host }}

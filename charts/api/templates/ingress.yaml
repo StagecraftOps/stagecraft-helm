@@ -18,6 +18,8 @@ metadata:
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/group.name: {{ .Values.ingress.groupName }}
     alb.ingress.kubernetes.io/group.order: "10"
+    alb.ingress.kubernetes.io/healthcheck-path: /health/live
+    alb.ingress.kubernetes.io/success-codes: "200"
 spec:
   rules:
     - host: {{ .Values.ingress.host }}
