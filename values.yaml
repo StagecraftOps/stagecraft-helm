@@ -1,5 +1,16 @@
 namespace: stagecraft
 
+# Cluster-wide store the 5 ExternalSecret resources (one per service chart)
+# pull from. Auth is IRSA via the ServiceAccount the External Secrets
+# Operator itself runs as (annotated with the eso_role_arn Terraform output —
+# see stagecraft-infra/cluster-bootstrap), not static AWS credentials.
+externalSecrets:
+  enabled: true
+  storeName: stagecraft
+  region: us-east-1
+  serviceAccountName: external-secrets
+  serviceAccountNamespace: external-secrets
+
 # Per-service overrides go under the matching subchart key, e.g.:
 #
 # api:

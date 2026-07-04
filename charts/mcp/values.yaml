@@ -22,6 +22,15 @@ serviceAccount:
   create: true
   roleArn: ""
 
+# Populates the stagecraft-mcp-secrets Kubernetes Secret from AWS Secrets
+# Manager via the External Secrets Operator (see the umbrella chart's
+# clustersecretstore.yaml).
+externalSecret:
+  enabled: true
+  storeName: stagecraft
+  awsSecretName: stagecraft-mcp-secrets
+  refreshInterval: 1h
+
 env:
   MCP_HOST: "0.0.0.0"
   MCP_PORT: "8010"
