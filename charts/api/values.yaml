@@ -61,7 +61,11 @@ ingress:
   enabled: true
   groupName: stagecraft
   host: stagecraft.example.com
-  path: /api
+  # /api/v1 = REST API, /ws = websockets. Deliberately NOT /api — the frontend
+  # owns /api/auth/* and /api/health as its own Next.js routes.
+  paths:
+    - /api/v1
+    - /ws
 
 migration:
   enabled: true
