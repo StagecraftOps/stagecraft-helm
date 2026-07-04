@@ -2,6 +2,10 @@
 Runs `alembic upgrade head` to completion before the new Deployment rolls
 out — see the note in stagecraft-api/app/main.py's lifespan(): schema
 changes happen exactly once here, not via create_all() racing across pods.
+
+Depends on this chart's own ServiceAccount/ConfigMap/ExternalSecret, which
+are also hooked (see common.serviceAccount etc.) at a lower hook-weight so
+they're guaranteed to exist first — on both fresh installs and upgrades.
 */}}
 {{- if .Values.migration.enabled }}
 apiVersion: batch/v1
