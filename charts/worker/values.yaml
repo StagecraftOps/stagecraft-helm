@@ -16,7 +16,7 @@ serviceAccount:
 env:
   ENVIRONMENT: production
   AWS_REGION: us-east-1
-  BEDROCK_MODEL_ID: amazon.nova-pro-v1:0
+  BEDROCK_MODEL_ID: anthropic.claude-sonnet-4-6
   USE_MULTI_AGENT: "true"
   USE_MCP_TOOLS: "true"
   FRONTEND_URL: https://stagecraft.example.com
