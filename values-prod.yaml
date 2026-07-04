@@ -7,14 +7,20 @@
 
 api:
   replicaCount: 3
+  image:
+    repository: yampss/stagecraft-api
+    tag: latest
   serviceAccount:
-    roleArn: "arn:aws:iam::REPLACE_ME:role/stagecraft-api"
+    roleArn: "arn:aws:iam::870325637146:role/stagecraft-api"
   ingress:
     host: stagecraft.example.com
 
 worker:
+  image:
+    repository: yampss/stagecraft-worker
+    tag: latest
   serviceAccount:
-    roleArn: "arn:aws:iam::REPLACE_ME:role/stagecraft-worker"
+    roleArn: "arn:aws:iam::870325637146:role/stagecraft-worker"
   worker:
     replicaCount: 3
   consumer:
@@ -22,15 +28,24 @@ worker:
 
 webhook:
   replicaCount: 2
+  image:
+    repository: yampss/stagecraft-webhook
+    tag: latest
   serviceAccount:
-    roleArn: "arn:aws:iam::REPLACE_ME:role/stagecraft-webhook"
+    roleArn: "arn:aws:iam::870325637146:role/stagecraft-webhook"
   ingress:
     host: webhooks.stagecraft.example.com
 
 frontend:
   replicaCount: 3
+  image:
+    repository: yampss/stagecraft-frontend
+    tag: latest
   ingress:
     host: stagecraft.example.com
 
 mcp:
   replicaCount: 2
+  image:
+    repository: yampss/stagecraft-mcp
+    tag: latest
