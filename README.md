@@ -22,30 +22,27 @@ Namespace: `stagecraft`. Service names: `stagecraft-<service>` (matches the k8s 
 
 ## Secrets
 
-This chart never templates plaintext secrets. Every Deployment's `envFrom` includes an **optional** `<service>-secrets` Secret reference — create it out-of-band (External Secrets Operator, Sealed Secrets, or `kubectl create secret` for a demo) before installing, containing whatever that service's `.env.example` lists (GitHub App credentials, `SECRET_KEY`/`TOKEN_ENCRYPTION_KEY`, AWS creds if not using IRSA, etc).
+This chart never templates plaintext secrets — it templates the *mechanism* that pulls them from AWS Secrets Manager instead:
+
+- The umbrella chart's `templates/clustersecretstore.yaml` installs one cluster-wide `ClusterSecretStore` (`external-secrets.io`), authenticated via the External Secrets Operator's own IRSA identity (`values.yaml`'s `externalSecrets.*`).
+- Each service chart's `templates/externalsecret.yaml` (`common.externalSecret`) renders an `ExternalSecret` that pulls that service's JSON secret (`stagecraft-<service>-secrets` in Secrets Manager, created by `stagecraft-infra`'s `module.secrets`) and materializes it as a same-named Kubernetes `Secret`.
+- Every Deployment's `envFrom` references that Secret as `optional: true`, so `helm install` doesn't hard-fail if ESO hasn't finished its first sync yet.
+
+**Prerequisite**: the External Secrets Operator itself must already be running in the cluster (installed by `stagecraft-infra/cluster-bootstrap`) before this chart's `ExternalSecret` resources can resolve.
 
 ## Usage
 
 ```bash
-# One-time: create the <service>-secrets Secret for each of the 5 services first.
-
 helm dependency update .
 helm upgrade --install stagecraft . -f values.yaml -f values-dev.yaml \
   --namespace stagecraft --create-namespace
+
+# Confirm ESO synced all 5 secrets:
+kubectl get externalsecret -n stagecraft
 ```
 
 Swap `values-dev.yaml` for `values-staging.yaml` / `values-prod.yaml` as appropriate. Prod's overlay expects the IRSA role ARNs from `terraform output` in `stagecraft-infra` — fill those in before applying.
 
 ## AWS Load Balancer Controller
 
-`stagecraft-infra` provisions the IAM role (`lb_controller_role_arn` output); this repo doesn't install the controller itself. Install it via its own Helm chart before the `api`/`webhook`/`frontend` Ingress resources here can provision an ALB:
-
-```bash
-helm repo add eks https://aws.github.io/eks-charts
-helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
-  -n kube-system \
-  --set clusterName=stagecraft \
-  --set serviceAccount.create=true \
-  --set serviceAccount.name=aws-load-balancer-controller \
-  --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=<lb_controller_role_arn output>
-```
+Already installed by `stagecraft-infra/cluster-bootstrap` (via `helm_release`, using the `lb_controller_role_arn` Terraform output for IRSA) — nothing to do here. This chart's `api`/`webhook`/`frontend` Ingress resources just assume the controller is present and share one ALB via an ingress group (`ingress.groupName: stagecraft`).

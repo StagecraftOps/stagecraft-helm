@@ -13,6 +13,16 @@ serviceAccount:
   create: true
   roleArn: ""
 
+# Populates the stagecraft-worker-secrets Kubernetes Secret from AWS Secrets
+# Manager via the External Secrets Operator (see the umbrella chart's
+# clustersecretstore.yaml). Shared by both the worker and consumer Deployments
+# below — they use the same ServiceAccount and the same secret name.
+externalSecret:
+  enabled: true
+  storeName: stagecraft
+  awsSecretName: stagecraft-worker-secrets
+  refreshInterval: 1h
+
 env:
   ENVIRONMENT: production
   AWS_REGION: us-east-1
