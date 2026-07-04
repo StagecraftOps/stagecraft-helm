@@ -34,7 +34,11 @@ webhook:
   serviceAccount:
     roleArn: "arn:aws:iam::870325637146:role/stagecraft-webhook"
   ingress:
-    host: webhooks.stagecraft.example.com
+    # Temporary: no Route53/ACM setup yet, so GitHub can't resolve
+    # webhooks.stagecraft.example.com. Using the ALB's own DNS name directly
+    # as the Host so real GitHub webhook deliveries can actually reach this
+    # service — swap back to a real domain once one exists.
+    host: k8s-stagecraft-1de7e348b3-1960332100.us-east-1.elb.amazonaws.com
 
 frontend:
   replicaCount: 3
