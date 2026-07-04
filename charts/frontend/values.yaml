@@ -33,7 +33,11 @@ env:
   # Empty string = relative URLs — frontend and API share one ALB domain via
   # path-based routing, so /api/v1/... resolves to the api service alongside it.
   NEXT_PUBLIC_API_URL: ""
-  API_URL_INTERNAL: http://stagecraft-api/
+  # No trailing slash — the frontend builds `${API_URL_INTERNAL}/api/v1/...`,
+  # and a trailing slash here produces a double slash (//api/v1/...) that the
+  # backend 404s, silently breaking server-side auth checks (the dashboard
+  # layout's /auth/me call) so no logged-in page ever renders.
+  API_URL_INTERNAL: http://stagecraft-api
 
 livenessProbe:
   httpGet:
