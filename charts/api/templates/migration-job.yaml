@@ -20,7 +20,13 @@ metadata:
     "helm.sh/hook-weight": "0"
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 spec:
-  backoffLimit: 2
+  # ESO needs a few seconds after the ExternalSecret hook creates its CR to
+  # actually sync the k8s Secret — Helm doesn't wait on custom-resource
+  # readiness, only on hook ordering, so the first attempt or two commonly
+  # runs before DATABASE_URL exists. Each retry gets a genuinely fresh
+  # envFrom resolution (new pod), so Kubernetes' own exponential backoff
+  # between attempts (10s/20s/40s/80s...) is what actually closes this gap.
+  backoffLimit: 6
   template:
     metadata:
       labels:
