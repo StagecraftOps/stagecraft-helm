@@ -58,7 +58,11 @@ frontend:
     host: k8s-stagecraft-1de7e348b3-1960332100.us-east-1.elb.amazonaws.com
 
 mcp:
-  replicaCount: 2
+  # Single replica: the MCP server uses SSE (a long-lived /sse connection plus
+  # separate /messages/ POSTs). Behind a round-robin ClusterIP, a 2nd replica
+  # breaks session affinity — the POST hits the wrong pod and 404s. Keep at 1
+  # until the Service has sessionAffinity or MCP moves to a stateless transport.
+  replicaCount: 1
   image:
     repository: yampss/stagecraft-mcp
     tag: latest
