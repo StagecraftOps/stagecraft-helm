@@ -6,8 +6,14 @@ image:
   tag: latest
   pullPolicy: Always
 
+# A ClusterIP Service on the health-server port so the api can reach the
+# celery worker's /internal/investigate endpoint (Pipeline Chat's AI path) at
+# stagecraft-worker.<ns>.svc.cluster.local:8080. Selects the worker deployment
+# (componentSuffix ""), not the consumer.
 service:
-  enabled: false
+  enabled: true
+  port: 8080
+  targetPort: 8080
 
 serviceAccount:
   create: true
