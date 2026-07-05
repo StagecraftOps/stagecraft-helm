@@ -66,3 +66,7 @@ mcp:
   image:
     repository: yampss/stagecraft-mcp
     tag: latest
+
+neo4j: {}
+# No overrides needed — charts/neo4j/values.yaml's defaults (gp3 10Gi,
+# replicas hardcoded to 1) are already prod-appropriate for this scale.

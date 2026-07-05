@@ -14,5 +14,8 @@ dependencies:
 - name: mcp
   repository: file://./charts/mcp
   version: 0.1.0
-digest: sha256:e34d45a8d1bd2719ba5495e297ca14757ad7cf93c3ea40d0738874ec9d863325
-generated: "2026-07-03T23:58:29.9299826+05:30"
+- name: neo4j
+  repository: file://./charts/neo4j
+  version: 0.1.0
+digest: sha256:1a7c936887080ca3bd85647e9f610ed26c5cd22252fc26c036ef54d1fa5b1df5
+generated: "2026-07-05T21:53:01.6903529+05:30"
