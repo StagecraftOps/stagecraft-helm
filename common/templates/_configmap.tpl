@@ -1,9 +1,3 @@
-{{/*
-A ConfigMap holding this service's non-secret env vars (.Values.env). Secrets
-(API keys, tokens) are expected to already exist as a Secret named
-<fullname>-secrets, created out-of-band (e.g. via External Secrets / sealed-secrets)
-— this chart never templates plaintext secrets into version control.
-*/}}
 {{- define "common.configMap" -}}
 {{- if .Values.env }}
 apiVersion: v1

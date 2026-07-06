@@ -1,5 +1,3 @@
-# Dev overlay: single replica everywhere, dev-suffixed image tags, dev host.
-# Usage: helm upgrade --install stagecraft . -f values.yaml -f values-dev.yaml
 
 api:
   image:
@@ -11,8 +9,7 @@ api:
 worker:
   image:
     tag: dev
-  # Nested under the subchart's own "worker"/"consumer" process keys — see
-  # charts/worker/values.yaml for what each field controls.
+
   worker:
     replicaCount: 1
   consumer:

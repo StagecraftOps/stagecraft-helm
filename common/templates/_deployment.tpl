@@ -1,9 +1,3 @@
-{{/*
-Standard Deployment shape shared by every Stagecraft service. Env vars come
-from two sources: the ConfigMap this chart renders (.Values.env, plaintext
-config) and a Secret named <fullname>-secrets that must already exist in the
-namespace (API keys/tokens — created out-of-band, never templated here).
-*/}}
 {{- define "common.deployment" -}}
 apiVersion: apps/v1
 kind: Deployment

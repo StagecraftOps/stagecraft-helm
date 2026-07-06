@@ -1,8 +1,3 @@
-{{/*
-A ClusterIP Service — in-cluster only. External exposure is via an Ingress
-(AWS Load Balancer Controller), not a Service type: LoadBalancer, so
-stagecraft-frontend/stagecraft-api/stagecraft-webhook share one ALB.
-*/}}
 {{- define "common.service" -}}
 {{- if .Values.service.enabled }}
 apiVersion: v1

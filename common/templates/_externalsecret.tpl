@@ -1,9 +1,3 @@
-{{/*
-An ExternalSecret that pulls this service's JSON secret out of AWS Secrets
-Manager (via the ClusterSecretStore the umbrella chart installs) and lays its
-keys out flat as a Kubernetes Secret named <fullname>-secrets — exactly the
-Secret common.deployment already wires up via envFrom.secretRef.
-*/}}
 {{- define "common.externalSecret" -}}
 {{- if .Values.externalSecret.enabled }}
 apiVersion: external-secrets.io/v1
