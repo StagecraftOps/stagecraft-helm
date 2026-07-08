@@ -4,7 +4,7 @@ api:
     tag: staging
   replicaCount: 1
   ingress:
-    host: staging.stagecraft.example.com
+    host: stagecraft.ustpace.com
 
 worker:
   image:
@@ -19,14 +19,14 @@ webhook:
     tag: staging
   replicaCount: 1
   ingress:
-    host: webhooks-staging.stagecraft.example.com
+    host: stagecraft.ustpace.com
 
 frontend:
   image:
     tag: staging
   replicaCount: 1
   ingress:
-    host: staging.stagecraft.example.com
+    host: stagecraft.ustpace.com
 
 mcp:
   image:

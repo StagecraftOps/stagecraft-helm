@@ -64,5 +64,5 @@ resources:
 ingress:
   enabled: true
   groupName: stagecraft
-  host: stagecraft.example.com
+  host: stagecraft.ustpace.com
   path: /
